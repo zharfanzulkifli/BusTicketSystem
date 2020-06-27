@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card-box">
+            <h4 class="mt-0 header-title">List of Bus Ticket</h4>
+            <p class="text-muted font-14 mb-3">
+                Only admin are able to <code>view</code>, <code>add</code>, <code>update</code> and <code>delete</code> the details of bus ticket listed here.
+                <a href="#ticket/add" style="float:right" type="button" class="btn btn-primary waves-effect width-md waves-light">Add New Ticket</a>
+            </p>
+
+            <table id="datatable" class="table table-bordered dt-responsive nowrap">
+                <thead>
+                <tr>
+                    <th rowspan="2">Index</th>
+                    <th rowspan="2">Bus ID</th>
+                    <th colspan="2">Bus Destination</th>
+                    <th rowspan="2">Date</th>
+                    <th rowspan="2">Quantity</th>
+                    <th rowspan="2">Price (RM)</th>
+                    <th rowspan="2">Option</th>
+                </tr>
+                <tr>
+                    <th>From</th>
+                    <th>To</th>
+                </tr>
+                </thead>
+
+
+                <tbody>
+                {{!-- {{#each ticketlist}}
+
+                    <tr>
+                        <td>{{ id }}</td>
+                        <td>{{ destfrom }}</td>
+                        <td>{{ destto }}</td>
+                        <td>{{ date }}</td>
+                        <td>{{ quantity }} / {{max}}</td>
+                        <td>{{ price }}</td>
+                        <td>
+                            <a href="#editticket" class="btn btn-icon waves-effect waves-light btn-dark"> <i class="fa fa-pencil-alt"></i> </a>
+                            <button class="btn btn-icon waves-effect waves-light btn-danger"> <i class="fa fa-trash"></i> </button>
+                        </td>
+                    </tr>
+
+                {{/each}} --}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> <!-- end row -->
