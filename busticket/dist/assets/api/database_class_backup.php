@@ -16,17 +16,6 @@ Class UsersV2
    var $role;
 }
 
-class Ticket {
-
-   var $id;
-   var $destfrom;
-   var $destto;
-   var $date;
-   var $quantity;
-   var $max;
-   var $price;
-
-}
 
 class DbStatus
 {
@@ -227,106 +216,7 @@ class Database
       }
    }
 
-   
-   function authenticateUser($email)
-   {
-      $sql = "SELECT * from users
-                 WHERE email = :email";
-
-      $stmt = $this->db->prepare($sql);
-      $stmt->bindParam("email", $email);
-      $stmt->execute();
-      $row_count = $stmt->rowCount();
-
-      $user = null;
-
-      if ($row_count) {
-         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $user = new UsersV2();
-            $user->id= $row['id'];
-            $user->username = $row['username'];
-            $user->password = $row['password'];
-            $user->email = $row['email'];
-            $user->role = $row['role'];
-         }
-      }
-
-      return $user;
-   }
-
-   function updateCurrentToken($token,$email){
-
-      $sql = "UPDATE users SET ownerlogin = :token WHERE email = :email";
-      $stmt = $this->db->prepare($sql);
-      $stmt->bindParam("token", $token);
-      $stmt->bindParam("email", $email);
-      $stmt->execute();
-
-   }
-
-   function createBooking($ticket_id, $user_id){
-
-      
-      $sql = "SELECT * from tickets
-                 WHERE id = :ticketid";
-
-      $stmt = $this->db->prepare($sql);
-      $stmt->bindParam("ticketid", $ticket_id);
-      $stmt->execute();
-      $row_count = $stmt->rowCount();
-
-      if ($row_count) {
-         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $ticket = new Ticket();
-            $ticket->quantity= $row['quantity'];
-            $ticket->max = $row['max'];
-
-         }
-
-         $quantity=$ticket->quantity;
-         $max=$ticket->max;
-         if($quantity < $max){
-
-            $sql = "INSERT INTO bookings (ticketid, userid)
-            VALUES (:ticketid, :userid)";      
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam("ticketid", $ticket_id);
-            $stmt->bindParam("userid", $user_id);
-            $stmt->execute();
-
-            $new_quantity=$quantity + 1;
-
-            $sql = "UPDATE tickets SET quantity = :quantity WHERE id = :ticketid";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam("quantity", $new_quantity);
-            $stmt->bindParam("ticketid", $ticket_id);
-            $stmt->execute();
-
-            $status="Success";
-
-         }
-         else{
-            $status="Full";
-         }
-         
-
-      }
-      return $status;
-
-   }
-
-
-
-
-
-
-
-
-
-
-
-
-   // =============EDIT FUNCTION END HERE==============//
+   // =============END HERE==============//
 
    function insertUser($login, $clearpassword)
    {
@@ -373,7 +263,31 @@ class Database
       return $row_count;
    }
 
+   function authenticateUser($login)
+   {
+      $sql = "SELECT login, password as passwordhash, email, name
+                 FROM users
+                 WHERE login = :login";
 
+      $stmt = $this->db->prepare($sql);
+      $stmt->bindParam("login", $login);
+      $stmt->execute();
+      $row_count = $stmt->rowCount();
+
+      $user = null;
+
+      if ($row_count) {
+         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $user = new User();
+            $user->login = $row['login'];
+            $user->passwordhash = $row['passwordhash'];
+            $user->email = $row['email'];
+            $user->name = $row['name'];
+         }
+      }
+
+      return $user;
+   }
 
    /////////////////////////////////////////////////////////////////////////////////// contacts
 

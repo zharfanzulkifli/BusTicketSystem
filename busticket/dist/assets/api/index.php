@@ -62,7 +62,7 @@
 
    //functions /////////////////////////////////////////////start
 
-   function generateToken($role, $login, $name) {      
+   function generateToken($role, $username, $email) {      
 
       //create JWT token
       $date = date_create();
@@ -70,12 +70,32 @@
       $jwtExp = $jwtIAT + (180 * 60); //expire after 3 hours
 
       $jwtToken = array(
-         "iss" => "rbk.net", //client key
+         "iss" => "rahsialah", //client key
          "iat" => $jwtIAT, //issued at time
          "exp" => $jwtExp, //expire
          "role" => $role,
-         "login" => $login,
-         "name" => $name
+         "username" => $username,
+         "email" => $email
+      );
+      $token = JWT::encode($jwtToken, getenv('JWT_SECRET'));
+      return $token;
+   }
+
+   function generateTokenV2($role, $username, $email,$id) {      
+
+      //create JWT token
+      $date = date_create();
+      $jwtIAT = date_timestamp_get($date);
+      $jwtExp = $jwtIAT + (180 * 60); //expire after 3 hours
+
+      $jwtToken = array(
+         "iss" => "busticket", //client key
+         "iat" => $jwtIAT, //issued at time
+         "exp" => $jwtExp, //expire
+         "role" => $role,
+         "username" => $username,
+         "email" => $email,
+         "id"=> $id
       );
       $token = JWT::encode($jwtToken, getenv('JWT_SECRET'));
       return $token;
@@ -123,7 +143,9 @@
                          ->withHeader('Content-tye', 'application/json');
       }
 
-      return $tokenDecoded->login;
+      // return $tokenDecoded->login;
+      return $tokenDecoded;
+
    }
    //functions /////////////////////////////////////////////ends
 
@@ -175,6 +197,8 @@
         'authenticator' => $authenticator
    ]));
 
+// ==============EDIT START HERE===============
+
    $app->get('/booking', function(){
       $db = getDatabase();
       $data = $db->getAllBooking();
@@ -197,56 +221,93 @@
       return $data;
    });
 
+   /**
+     * Public route /auth for creds authentication / login process
+     */
+   $app->post('/auth', function($request, $response){
+      //extract form data - email and password
+      $email = $request->getParsedBody()['email'];
+      $password = $request->getParsedBody()['password'];
 
+      //do db authentication
+      $db = getDatabase();
+      $data = $db->authenticateUser($email);
+
+
+      //status -1 -> user not found
+      //status 0 -> wrong password
+      //status 1 -> login success
+
+      $returndata = array(
+      );
+
+      //user not found
+      if ($data === NULL) {
+         $returndata = array(
+            "loginStatus" => false,
+            "errorMessage" => "No user found"
+         );           
+      }      
+      else { //user found
+
+         if ($data->password == $password) {
+
+            $token=generateTokenV2($data->role, $data->username, $data->email,$data->id);
+            $db->updateCurrentToken($token,$email);
+            $db->close();
+
+            $returndata = array(
+               "loginStatus" => true, 
+               "token" => $token
+            );
+
+         } else {
+
+            $returndata = array(
+               "loginStatus" => false,
+               "errorMessage" => "Username/password is incorrect!"
+            );
+
+         }
+      }  
+
+      return $response->withJson($returndata, 200)
+                      ->withHeader('Content-type', 'application/json');    
+   }); 
+
+
+   $app->post('/createBooking', function($request, $response){
+      $ticket_id= $request->getParsedBody()['ticket_id'];
+      $user=getLoginFromTokenPayload($request, $response);
+      $user_id= $user->id;
+
+      $db = getDatabase();
+      $status = $db->createBooking($ticket_id,$user_id);
+
+      $returndata = array(
+         "bookingStatus" => $status,
+      );
+
+      return $response->withJson($returndata, 200)
+      ->withHeader('Content-type', 'application/json');    
+
+
+  
+   });
+
+
+
+
+// ==============EDIT END HERE===============
 
    /**
      * Public route example
      */
-   $app->get('/ping', function($request, $response){
+    $app->get('/ping', function($request, $response){
       $output = ['msg' => 'RESTful API works, active and online!'];
       return $response->withJson($output, 200, JSON_PRETTY_PRINT);
    });
 
-   /**
-     * Public route example
-     * in real application, this must be disable
-     * only for debugging, generating token instantly
-     * without login
-     */
-   $app->get('/token', function($request, $response){
-      $token = generateToken('member', 'bean', 'mr bean');
-      $output = ['token' => $token];
-      return $response->withJson($output, 200, JSON_PRETTY_PRINT);
-   });
-
-   //public route sample with 1 parameter
-   $app->get('/hello/[{name}]', function($request, $response, $args){
-
-      $name = $args['name'];
-      $msg = "Hello $name, welcome to RESTFul world";
-
-      $data = array(
-         'msg' => $msg
-      );
-
-      return $response->withJson($data, 200, JSON_PRETTY_PRINT);
-   });
-
-   //public route sample with more than one parameters
-   $app->get('/calc[/{num1}/{num2}]', function($request, $response, $args){
-
-      $num1 = $args['num1'];
-      $num2 = $args['num2'];
-      $total = $num1 + $num2;
-
-      $msg = "$num1 + $num2 = $total";
-
-      $data = array(
-         'msg' => $msg
-      );
-
-      return $response->withJson($data, 200, JSON_PRETTY_PRINT);
-   });
 
    /**
      * Public route /registration for member registration
@@ -271,71 +332,6 @@
                       ->withHeader('Content-type', 'application/json'); 
    });
 
-   /**
-     * Public route /auth for creds authentication / login process
-     */
-   $app->post('/auth', function($request, $response){
-      //extract form data - email and password
-      $json = json_decode($request->getBody());
-      $login = $json->login;
-      $clearpassword = $json->password;
-
-      //do db authentication
-      $db = getDatabase();
-      $data = $db->authenticateUser($login);
-      $db->close();
-
-      //status -1 -> user not found
-      //status 0 -> wrong password
-      //status 1 -> login success
-
-      $returndata = array(
-      );
-
-      //user not found
-      if ($data === NULL) {
-         $returndata = array(
-            "loginStatus" => false,
-            "errorMessage" => "Username/password is incorrect!"
-         );           
-      }      
-      else { //user found
-
-         if (password_verify($clearpassword, $data->passwordhash)) {
-
-            //create JWT token
-            $date = date_create();
-            $jwtIAT = date_timestamp_get($date);
-            $jwtExp = $jwtIAT + (60 * 60 * 12); //expire after 12 hours
-
-            $jwtToken = array(
-               "iss" => "mycontacts.net", //token issuer
-               "iat" => $jwtIAT, //issued at time
-               "exp" => $jwtExp, //expire
-               "role" => "member",
-               "login" => $data->login,
-               "name" => $data->name
-            );
-            $token = JWT::encode($jwtToken, getenv('JWT_SECRET'));
-
-            $returndata = array(
-               "loginStatus" => true, 
-               "token" => $token
-            );
-
-         } else {
-
-            $returndata = array(
-               "loginStatus" => false,
-               "errorMessage" => "Username/password is incorrect!"
-            );
-
-         }
-      }  
-
-      return $response->withJson($returndata, 200)
-                      ->withHeader('Content-type', 'application/json');    
-   }); 
 
    //restricted route
    //refresh token
