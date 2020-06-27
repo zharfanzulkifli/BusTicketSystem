@@ -1,205 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>Bus Ticket System</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
-        <meta content="Coderthemes" name="author" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <!-- App favicon -->
-        <link rel="shortcut icon" href="assets/images/favicon.ico">
 
-        <!-- App css -->
-        <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-        <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" />
+<head>
+    <meta charset="utf-8" />
+    <title>Bus Ticket System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
 
-    </head>
+    <!-- App css -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" />
 
-    <body>
+</head>
 
-        <!-- Navigation Bar-->
-        <header id="topnav">
+<body>
 
-            <!-- Topbar Start -->
-            <div class="navbar-custom">
-                <div class="container-fluid">
-                    <ul class="list-unstyled topnav-menu float-right mb-0">
+    <!-- Navigation Bar-->
+    <header id="topnav">
 
-                        <li class="dropdown notification-list">
-                            <!-- Mobile menu toggle-->
-                            <a class="navbar-toggle nav-link">
-                                <div class="lines">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                            </a>
-                            <!-- End mobile menu toggle-->
-                        </li>
+        <!-- Topbar Start -->
+        <div class="navbar-custom">
+            <div class="container-fluid">
+                <ul class="list-unstyled topnav-menu float-right mb-0">
 
-                        <li class="dropdown notification-list">
-                            <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                <span class="pro-user-name ml-1">
-                                    Nowak <i class="mdi mdi-chevron-down"></i> 
-                                </span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                <!-- item-->
-                                <div class="dropdown-header noti-title">
-                                    <h6 class="text-overflow m-0">Welcome !</h6>
-                                </div>
-    
-                                <div class="dropdown-divider"></div>
-    
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="fe-log-out"></i>
-                                    <span>Logout</span>
-                                </a>
-    
+                    <li class="dropdown notification-list">
+                        <!-- Mobile menu toggle-->
+                        <a class="navbar-toggle nav-link">
+                            <div class="lines">
+                                <span></span>
+                                <span></span>
+                                <span></span>
                             </div>
-                        </li>
-    
-                    </ul>
-    
-                    <!-- LOGO -->
-                    <div class="logo-box">
-                        <a href="index.html" class="logo text-center">
-                            <span class="logo-lg">
-                                <img src="assets/images/logo-light.png" alt="" height="16">
-                                <!-- <span class="logo-lg-text-light">UBold</span> -->
-                            </span>
-                            <span class="logo-sm">
-                                <!-- <span class="logo-sm-text-dark">U</span> -->
-                                <img src="assets/images/logo-sm.png" alt="" height="24">
+                        </a>
+                        <!-- End mobile menu toggle-->
+                    </li>
+
+                    <li class="dropdown notification-list">
+                        <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect" data-toggle="dropdown" href="#"
+                            role="button" aria-haspopup="false" aria-expanded="false">
+                            <span class="pro-user-name ml-1">
+                                Nowak <i class="mdi mdi-chevron-down"></i>
                             </span>
                         </a>
-                    </div>
-    
-                </div> <!-- end container-fluid-->
-            </div>
-            <!-- end Topbar -->
-
-            <div class="topbar-menu">
-                <div class="container-fluid">
-                    <div id="navigation">
-                        <!-- Navigation Menu-->
-                        <ul class="navigation-menu">
-
-                            <li class="has-submenu">
-                                <a href="#"><i class="mdi mdi-view-dashboard"></i>Home</a>
-                            </li>
-
-                            <li class="has-submenu">
-                                <a href="#editticket"><i class="ti-user"></i></i>User List</a>
-                            </li>
-
-                            <li class="has-submenu">
-                                <a href="#ticket"><i class="ti-truck"></i>Bus Ticket</a>
-                            </li>
-
-                            <li class="has-submenu">
-                                <a href="#createticket"><i class="ti-bookmark-alt"></i>Report</a>
-                            </li>
-
-                        </ul>
-                        <!-- End navigation menu -->
-
-                        <div class="clearfix"></div>
-                    </div>
-                    <!-- end #navigation -->
-                </div>
-                <!-- end container -->
-            </div>
-            <!-- end navbar-custom -->
-
-        </header>
-        <!-- End Navigation Bar-->
-
-        <!-- ============================================================== -->
-        <!-- Start Page Content here -->
-        <!-- ============================================================== -->
-
-        <div class="wrapper">
-            <div class="container-fluid">
-
-                <!-- start page title -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="page-title-box">
-                            
-                            <!-- breadcrumb -->
-                            <div class="page-title-right">
-                                <ol class="breadcrumb m-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">#</a></li>
-                                    <li class="breadcrumb-item active">#</li>
-                                </ol>
+                        <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                            <!-- item-->
+                            <div class="dropdown-header noti-title">
+                                <h6 class="text-overflow m-0">Welcome !</h6>
                             </div>
-                            
-                            <!-- page title -->
-                            <h4 class="page-title">Home</h4>
-                            
-                            <!-- contents -->
-                            <div class="well" id="divcontent">
-                            </div>
+
+                            <div class="dropdown-divider"></div>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <i class="fe-log-out"></i>
+                                <span>Logout</span>
+                            </a>
+
                         </div>
-                    </div>
-                </div>     
-                <!-- end page title --> 
+                    </li>
 
-                
-            </div> <!-- end container -->
+                </ul>
+
+                <!-- LOGO -->
+                <div class="logo-box">
+                    <a href="index.html" class="logo text-center">
+                        <span class="logo-lg">
+                            <img src="assets/images/logo-light.png" alt="" height="16">
+                            <!-- <span class="logo-lg-text-light">UBold</span> -->
+                        </span>
+                        <span class="logo-sm">
+                            <!-- <span class="logo-sm-text-dark">U</span> -->
+                            <img src="assets/images/logo-sm.png" alt="" height="24">
+                        </span>
+                    </a>
+                </div>
+
+            </div> <!-- end container-fluid-->
         </div>
-        <!-- end wrapper -->
+        <!-- end Topbar -->
 
-        <!-- ============================================================== -->
-        <!-- End Page content -->
-        <!-- ============================================================== -->
-
-        <!-- Footer Start -->
-        <footer class="footer">
+        <div class="topbar-menu">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6">
-                        2020 &copy; Bus Ticket System by <a href="#">Group Bebas</a> 
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-md-right footer-links d-none d-sm-block">
-                            <a href="javascript:void(0);">About Us</a>
-                            <a href="javascript:void(0);">Help</a>
-                            <a href="javascript:void(0);">Contact Us</a>
+                <div id="navigation">
+                    <!-- Navigation Menu-->
+                    <ul class="navigation-menu">
+
+                        <li class="has-submenu">
+                            <a href="#"><i class="mdi mdi-view-dashboard"></i>Home</a>
+                        </li>
+
+                        <li class="has-submenu">
+                            <a href="#editticket"><i class="ti-user"></i></i>User List</a>
+                        </li>
+
+                        <li class="has-submenu">
+                            <a href="#ticket"><i class="ti-truck"></i>Bus Ticket</a>
+                        </li>
+
+                        <li class="has-submenu">
+                            <a href="#createticket"><i class="ti-bookmark-alt"></i>Report</a>
+                        </li>
+
+                    </ul>
+                    <!-- End navigation menu -->
+
+                    <div class="clearfix"></div>
+                </div>
+                <!-- end #navigation -->
+            </div>
+            <!-- end container -->
+        </div>
+        <!-- end navbar-custom -->
+
+    </header>
+    <!-- End Navigation Bar-->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <div class="wrapper">
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+
+                        <!-- breadcrumb -->
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">#</a></li>
+                                <li class="breadcrumb-item active">#</li>
+                            </ol>
+                        </div>
+
+                        <!-- page title -->
+                        <h4 class="page-title">Home</h4>
+
+                        <!-- contents -->
+                        <div class="well" id="divcontent">
                         </div>
                     </div>
                 </div>
             </div>
-        </footer>
-        <!-- end Footer -->
-
-        <!-- Right bar overlay-->
-        <div class="rightbar-overlay"></div>
-
-        <!-- Vendor js -->
-        <script src="assets/js/vendor.min.js"></script>
-
-        <!-- App js-->
-        <script src="assets/js/app.min.js"></script>
+            <!-- end page title -->
 
 
-        
-        
-        
-        <script src="js/jquery-3.2.1.min.js"></script>
-        <script src="js/signals.min.js"></script>
-        <script src="js/hasher.min.js"></script>    
-        <script src="js/crossroads.min.js"></script>
+        </div> <!-- end container -->
+    </div>
+    <!-- end wrapper -->
 
-        <script src="js/handlebars.min-v4.7.6.js"></script>
-      
-        <script src="js/bootbox.min.js"></script>
-        <script src="js/app.js"></script>
-        <script src="js/events.js"></script>
-    </body>
+    <div class="well" id="divcontent">
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+    <!-- Footer Start -->
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    2020 &copy; Bus Ticket System by <a href="#">Group Bebas</a>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-md-right footer-links d-none d-sm-block">
+                        <a href="javascript:void(0);">About Us</a>
+                        <a href="javascript:void(0);">Help</a>
+                        <a href="javascript:void(0);">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- end Footer -->
+
+    <!-- Right bar overlay-->
+    <div class="rightbar-overlay"></div>
+
+    <!-- Vendor js -->
+    <script src="assets/js/vendor.min.js"></script>
+
+    <!-- App js-->
+    <script src="assets/js/app.min.js"></script>
+
+
+
+
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/signals.min.js"></script>
+    <script src="js/hasher.min.js"></script>
+    <script src="js/crossroads.min.js"></script>
+
+    <script src="js/handlebars.min-v4.7.6.js"></script>
+
+    <script src="js/bootbox.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/events.js"></script>
+
+    <!-- booking -->
+    <script src="assets/js/appBooking.js"></script>
+</body>
+
 </html>
