@@ -315,6 +315,41 @@ class Database
 
    }
 
+   function getAllTicket()
+   {
+      try {
+         $sql = "SELECT * FROM tickets";
+         $stmt = $this->db->prepare($sql);
+         $stmt->execute();
+         $row_count = $stmt->rowCount();
+         $data = array();
+         if ($row_count) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+               $ticket = new Ticket();
+               $ticket->id = $row['id'];
+               $ticket->destfrom = $row['destfrom'];
+               $ticket->destto = $row['destto'];
+               $ticket->date = $row['date'];
+               $ticket->quantity = $row['quantity'];
+               $ticket->max = $row['max'];
+               $ticket->price = $row['price'];
+
+               array_push($data, $ticket);
+            }
+
+            echo json_encode($data);
+            exit;
+         } else {
+            echo json_encode($data);
+            exit;
+         }
+      } catch (PDOException $e) {
+         die('ERROR: ' . $e->getMessage());
+      }
+   }
+
+
+
 
 
 

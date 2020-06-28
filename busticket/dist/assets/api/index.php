@@ -192,7 +192,8 @@
             '/hello',
             '/calc',
             '/registration',
-            '/booking'
+            '/booking',
+            '/ticket'
          ], 
         'authenticator' => $authenticator
    ]));
@@ -293,6 +294,13 @@
 
 
   
+   });
+
+   $app->get('/ticket', function(){
+      $db = getDatabase();
+      $data = $db->getAllTicket();
+      $db->close();
+      return $data;
    });
 
 
