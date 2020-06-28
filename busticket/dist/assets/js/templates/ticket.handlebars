@@ -3,32 +3,35 @@
         <div class="card-box">
             <h4 class="mt-0 header-title">List of Bus Ticket</h4>
             <p class="text-muted font-14 mb-3">
-                Only admin are able to <code>view</code>, <code>add</code>, <code>update</code> and <code>delete</code> the details of bus ticket listed here.
-                <a href="#ticket/add" style="float:right" type="button" class="btn btn-primary waves-effect width-md waves-light">Add New Ticket</a>
+                Only admin are able to <code>view</code>, <code>add</code>, <code>update</code> and <code>delete</code>
+                the details of bus ticket listed here.
+                <a href="#ticket/add" style="float:right" type="button"
+                    class="btn btn-primary waves-effect width-md waves-light">Add New Ticket</a>
             </p>
 
             <table id="datatable" class="table table-bordered dt-responsive nowrap">
                 <thead>
-                <tr>
-                    <th rowspan="2">Index</th>
-                    <th rowspan="2">Bus ID</th>
-                    <th colspan="2">Bus Destination</th>
-                    <th rowspan="2">Date</th>
-                    <th rowspan="2">Quantity</th>
-                    <th rowspan="2">Price (RM)</th>
-                    <th rowspan="2">Option</th>
-                </tr>
-                <tr>
-                    <th>From</th>
-                    <th>To</th>
-                </tr>
+                    <tr>
+                        <th rowspan="2">Index</th>
+                        <th rowspan="2">Bus ID</th>
+                        <th colspan="2">Bus Destination</th>
+                        <th rowspan="2">Date</th>
+                        <th rowspan="2">Quantity</th>
+                        <th rowspan="2">Price (RM)</th>
+                        <th rowspan="2">Option</th>
+                    </tr>
+                    <tr>
+                        <th>From</th>
+                        <th>To</th>
+                    </tr>
                 </thead>
 
 
                 <tbody>
-                {{#each ticketlist}}
+                    {{#each ticketlist}}
 
                     <tr>
+                        <td>{{ index }}</td>
                         <td>{{ id }}</td>
                         <td>{{ destfrom }}</td>
                         <td>{{ destto }}</td>
@@ -36,14 +39,93 @@
                         <td>{{ quantity }} / {{max}}</td>
                         <td>{{ price }}</td>
                         <td>
-                            <a href="#editticket" class="btn btn-icon waves-effect waves-light btn-dark"> <i class="fa fa-pencil-alt"></i> </a>
-                            <button class="btn btn-icon waves-effect waves-light btn-danger"> <i class="fa fa-trash"></i> </button>
+                            <a href="#ticket/edit/{{id}}" class="btn btn-icon waves-effect waves-light btn-dark editticketbutton"> <i class="fa fa-pencil-alt"></i> </a>
+                            <a href='javascript:;' class="btn btn-icon waves-effect waves-light btn-danger deleteticketbutton"> <i class="fa fa-trash"></i> </a>
                         </td>
                     </tr>
 
-                {{/each}}
+                    {{/each}}
                 </tbody>
             </table>
         </div>
     </div>
-</div> <!-- end row -->
+</div>
+
+<script>
+    $(function () {
+        $("#datatable").on("click", ".deleteticketbutton", function () {
+            var link = $(this);
+
+            //                     TD       TR
+            var parentTR = $(this).parent().parent();
+            var firstTD = $(parentTR).children().eq(0);
+            
+            //var id = $(firstTD).data("id");
+            var id = $(this).parent().parent().children().eq(1).html();
+            console.log(id);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                html: "You want to delete the ticket?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+
+            }).then((result) => {
+
+                if (result.value) {
+
+                    $.ajax({
+                        type: "delete",
+                        url: 'assets/api/ticket/' + id,
+                        dataType: "json",
+                        success: function (data) {
+
+                            if (data.deleteStatus) {
+
+                                alert('Ticket deletion successful');
+
+                                $(parentTR).fadeOut("slow", "swing", function (e) {
+
+                                    //remove row from the table
+                                    $(parentTR).remove();
+
+
+                                });
+
+                            }
+                            else {
+
+                                alert("Ticket deletion failed - please try again: " + data.error)
+                            }
+
+                        },
+                        error: function (xhr, statusText, err) {
+
+                            if (xhr.status == 401) {
+                                //response text from the server if there is any
+                                var responseText = JSON.parse(xhr.responseText);
+                                bootbox.alert("Error 401 - Unauthorized: " + responseText.message);
+
+                                $("#loginname").html("noname");
+                                sessionStorage.removeItem("token");
+                                sessionStorage.removeItem("login");
+                                window.location.href = "#login";
+                                return;
+                            }
+
+                            if (xhr.status == 404) {
+                                bootbox.alert("Error 404 - API resource not found at the server");
+                            }
+
+                        }
+                    });
+
+                }
+
+            })
+        });
+    });
+</script> <!-- end row -->

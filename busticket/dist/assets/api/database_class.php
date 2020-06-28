@@ -347,9 +347,16 @@ class Database
          $stmt->execute();
          $row_count = $stmt->rowCount();
          $data = array();
+
+         $index = 1;
+
          if ($row_count) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+               
                $ticket = new Ticket();
+               
+               $ticket->index =$index;
+               $index +=1;
                $ticket->id = $row['id'];
                $ticket->destfrom = $row['destfrom'];
                $ticket->destto = $row['destto'];
@@ -370,6 +377,138 @@ class Database
       } catch (PDOException $e) {
          die('ERROR: ' . $e->getMessage());
       }
+   }
+
+   function getEditTicket($id)
+   {
+      try {
+         $sql = "SELECT * FROM tickets WHERE id = :id";
+         $stmt = $this->db->prepare($sql);
+         $stmt->bindParam("id", $id);
+         $stmt->execute();
+         $row_count = $stmt->rowCount();
+         //$data = array();
+
+         if ($row_count) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+               
+               $ticket = new Ticket();
+               $ticket->id = $row['id'];
+               $ticket->destfrom = $row['destfrom'];
+               $ticket->destto = $row['destto'];
+               $ticket->date = $row['date'];
+               $ticket->quantity = $row['quantity'];
+               $ticket->max = $row['max'];
+               $ticket->price = $row['price'];
+
+               //array_push($data, $ticket);
+            }
+
+            echo json_encode($ticket);
+            exit;
+         } else {
+            echo json_encode($data);
+            exit;
+         }
+      } catch (PDOException $e) {
+         die('ERROR: ' . $e->getMessage());
+      }
+   }
+
+   function insertTicket($destfrom, $destto, $date, $max, $price) {
+
+      try {
+         
+         $sql = "INSERT INTO tickets (destfrom, destto, date, max, price) 
+                 VALUES (:destfrom, :destto, :date, :max, :price)";
+
+         $stmt = $this->db->prepare($sql);  
+         $stmt->bindParam("destfrom", $destfrom);
+         $stmt->bindParam("destto"  , $destto);
+         $stmt->bindParam("date"    , $date);
+         $stmt->bindParam("max"     , $max);
+         $stmt->bindParam("price"   , $price);
+         $stmt->execute();
+
+         $dbs = new DbStatus();
+         $dbs->status = true;
+         $dbs->error = "none";
+         $dbs->lastinsertid = $this->db->lastInsertId();
+
+         return $dbs;
+      }
+      catch(PDOException $e) {
+         $errorMessage = $e->getMessage();
+
+         $dbs = new DbStatus();
+         $dbs->status = false;
+         $dbs->error = $errorMessage;
+
+         return $dbs;
+      }          
+   }
+
+   function updateTicket($id, $destfrom, $destto, $date, $max, $price) {
+
+      $sql = "UPDATE tickets
+               SET destfrom = :destfrom,
+                  destto = :destto,
+                  date = :date,
+                  max = :max,
+                  price = :price
+               WHERE id = :id";
+
+      try {
+         $stmt = $this->db->prepare($sql);  
+         $stmt->bindParam("id", $id);
+         $stmt->bindParam("destfrom", $destfrom);
+         $stmt->bindParam("destto", $destto);
+         $stmt->bindParam("date", $date);
+         $stmt->bindParam("max", $max);
+         $stmt->bindParam("price", $price);
+         $stmt->execute();
+
+         $dbs = new DbStatus();
+         $dbs->status = true;
+         $dbs->error = "none";
+
+         return $dbs;
+      }
+      catch(PDOException $e) {
+         $errorMessage = $e->getMessage();
+
+         $dbs = new DbStatus();
+         $dbs->status = false;
+         $dbs->error = $errorMessage;
+
+         return $dbs;
+      } 
+   }
+
+   function deleteTicket($id) {
+
+      $dbstatus = new DbStatus();
+
+      $sql = "DELETE 
+              FROM tickets 
+              WHERE id = :id";
+
+      try {
+         $stmt = $this->db->prepare($sql); 
+         $stmt->bindParam("id", $id);
+         $stmt->execute();
+
+         $dbstatus->status = true;
+         $dbstatus->error = "none";
+         return $dbstatus;
+      }
+      catch(PDOException $e) {
+         $errorMessage = $e->getMessage();
+
+         $dbstatus->status = false;
+         $dbstatus->error = $errorMessage;
+         return $dbstatus;
+      }           
    }
 
 

@@ -11,6 +11,9 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
 
+    <!-- Sweet Alert css -->
+    <link href="assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+
     <!-- App css -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
@@ -98,7 +101,7 @@
                         </li>
 
                         <li class="has-submenu" id="userlist">
-                            <a href="#editticket"><i class="ti-user"></i></i>User List</a>
+                            <a href="#userlist"><i class="ti-user"></i></i>User List</a>
                         </li>
 
                         <li class="has-submenu" id="ticket">
@@ -106,11 +109,11 @@
                         </li>
 
                         <li class="has-submenu" id="booking">
-                            <a href="#createticket"><i class="ti-bookmark-alt"></i>Booking</a>
+                            <a href="#booking"><i class="ti-bookmark-alt"></i>Booking</a>
                         </li>
 
                         <li class="has-submenu" id="record">
-                            <a href="#createticket"><i class="ti-bookmark-alt"></i>Record</a>
+                            <a href="#record"><i class="ti-bookmark-alt"></i>Record</a>
                         </li>
 
                     </ul>
@@ -199,6 +202,14 @@
     <!-- App js-->
     <script src="assets/js/app.min.js"></script>
 
+    <!-- Sweet Alerts js -->
+    <script src="assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+    <!-- Sweet alert init js-->
+    <script src="assets/js/pages/sweet-alerts.init.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
     <script src="assets/js/jquery-3.2.1.min.js"></script>
     <script src="assets/js/signals.min.js"></script>
     <script src="assets/js/hasher.min.js"></script>
@@ -215,6 +226,7 @@
 
     <!-- ticket -->
     <script src="assets/js/controller/appTicket.js"></script>
+    <script src="assets/js/controller/eventTicket.js"></script>
 </body>
 
 </html>

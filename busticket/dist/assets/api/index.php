@@ -392,11 +392,86 @@
   
    });
 
-   $app->get('/ticket', function(){
+   $app->get('/ticket', function($request, $response){
       $db = getDatabase();
       $data = $db->getAllTicket();
       $db->close();
       return $data;
+   });
+
+   $app->get('/ticket/[{id}]', function($request, $response, $args){
+
+      $id = $args['id'];
+
+      $db = getDatabase();
+      $data = $db->getEditTicket($id);
+      $db->close();
+      return $data;
+   });
+
+   $app->post('/ticket', function($request, $response){
+
+      $json = json_decode($request->getBody());
+
+      $destfrom   = $json->destfrom;
+      $destto     = $json->destto;
+      $date       = $json->date;
+      $max        = $json->max;
+      $price      = $json->price;
+
+      $db = getDatabase();
+      $dbs = $db->insertTicket($destfrom, $destto, $date, $max, $price);
+      $db->close();
+
+      $data = array(
+         "insertStatus" => $dbs->status,
+         "errorMessage" => $dbs->error
+      );
+
+
+      return $response->withJson($data, 200)
+                      ->withHeader('Content-type', 'application/json'); 
+   });
+
+   $app->put('/ticket/[{id}]', function($request, $response, $args){
+      
+      $id = $args['id'];
+      
+      $json = json_decode($request->getBody());
+      $destfrom   = $json->destfrom;
+      $destto     = $json->destto;
+      $date       = $json->date;
+      $max        = $json->max;
+      $price      = $json->price;
+
+      $db = getDatabase();
+      $dbs = $db->updateTicket($id, $destfrom, $destto, $date, $max, $price);
+      $db->close();
+
+      $data = Array(
+         "updateStatus" => $dbs->status,
+         "errorMessage" => $dbs->error
+      );
+
+      return $response->withJson($data, 200)
+                      ->withHeader('Content-type', 'application/json');
+   });
+
+   $app->delete('/ticket/[{id}]', function($request, $response, $args){
+
+      $id = $args['id'];
+
+      $db = getDatabase();
+      $dbs = $db->deleteTicket($id);
+      $db->close();
+
+      $data = Array(
+         "deleteStatus" => $dbs->status,
+         "errorMessage" => $dbs->error
+      );
+
+      return $response->withJson($data, 200)
+                      ->withHeader('Content-type', 'application/json');     
    });
 
 

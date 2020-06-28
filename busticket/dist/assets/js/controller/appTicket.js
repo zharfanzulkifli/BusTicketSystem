@@ -5,7 +5,7 @@ $(function () {
     }
     crossroads.ignoreState = true;
 
-    var ticketRoute = crossroads.addRoute('/ticket', function () {
+    var viewticketRoute = crossroads.addRoute('/ticket', function () {
 
         $.ajax({
             type: "GET",
@@ -13,16 +13,21 @@ $(function () {
             dataType: "json",
             success: function (data) {
                 $.get('assets/js/templates/ticket.handlebars').then(function (src) {
+
                     var template = Handlebars.compile(src);
                     var html = template({ "ticketlist": data });
-                    // $('body').empty();
-                    // // $('body').html(html);
-                    // $('body').append(html);
+
                     $("#divcontent").empty();
                     $("#divcontent").html(html);
 
+                    $(".page-title").empty();
+                    $(".page-title").append("Bus Ticket");
+
+                    $(".breadcrumb").empty();
+                    $(".breadcrumb").append("<li class='breadcrumb-item'><a href='#home'>Home</a></li>");
+                    $(".breadcrumb").append("<li class='breadcrumb-item active'>Ticket</li>");
+
                 })
-                console.log({ "ticketlist": data });
             },
             error: function (xhr, statusText, err) {
                 $('body').empty();
@@ -34,48 +39,59 @@ $(function () {
         })
     });
 
-    var routecreateticket = crossroads.addRoute('/ticket/add', function () {
+    var createTicketRoute = crossroads.addRoute('/ticket/add', function () {
 
-        $.get('js/templates/ticket-create.handlebars').then(function (src) {
-            var createticketTemplate = Handlebars.compile(src);
+        $.get('assets/js/templates/ticket-create.handlebars').then(function (src) {
+
+            var template = Handlebars.compile(src);
 
             $("#divcontent").empty();
-            $("#divcontent").html(createticketTemplate).hide().fadeIn(1000);
-
-            $(".breadcrumb").empty();
-            $(".breadcrumb").append("<li class='breadcrumb-item'><a href='javascript: void(0);'>Home</a></li>");
-            $(".breadcrumb").append("<li class='breadcrumb-item'><a href='javascript: void(0);'>ABC</a></li>");
-            $(".breadcrumb").append("<li class='breadcrumb-item active'>DEF</li>");
+            $("#divcontent").html(template);
 
             $(".page-title").empty();
-            $(".page-title").append("Create New Ticket");
+            $(".page-title").append("Create New Bus Ticket");
 
-            $(".navbar-collapse li").removeClass('active');
-            $(".navbar-collapse li a[href='#contacts']").parent().addClass('active');
-        });
+            $(".breadcrumb").empty();
+            $(".breadcrumb").append("<li class='breadcrumb-item'><a href='#home'>Home</a></li>");
+            $(".breadcrumb").append("<li class='breadcrumb-item'><a href='#ticket'>Ticket</a></li>");
+            $(".breadcrumb").append("<li class='breadcrumb-item active'>Create New Ticket</li>");
+        })
 
     });
 
-    var routeeditticket = crossroads.addRoute('/ticket/edit', function () {
+    var editTicketRoute = crossroads.addRoute('/ticket/edit/{id}', function (id) {
 
-        $.get('js/templates/ticket-edit.handlebars').then(function (src) {
-            var editticketTemplate = Handlebars.compile(src);
+        $.ajax({
+            type: "GET",
+            url: 'assets/api/ticket/' + id,
+            dataType: "json",
+            success: function (data) {
+                $.get('assets/js/templates/ticket-edit.handlebars').then(function (src) {
 
-            $("#divcontent").empty();
-            $("#divcontent").html(editticketTemplate).hide().fadeIn(1000);
+                    var template = Handlebars.compile(src);
+                    var html = template(data);
 
-            $(".breadcrumb").empty();
-            $(".breadcrumb").append("<li class='breadcrumb-item'><a href='javascript: void(0);'>Home</a></li>");
-            $(".breadcrumb").append("<li class='breadcrumb-item'><a href='javascript: void(0);'>ABC</a></li>");
-            $(".breadcrumb").append("<li class='breadcrumb-item active'>DEF</li>");
+                    $("#divcontent").empty();
+                    $("#divcontent").html(html);
 
-            $(".page-title").empty();
-            $(".page-title").append("Edit Ticket");
+                    $(".page-title").empty();
+                    $(".page-title").append("Edit Bus Ticket");
 
-            $(".navbar-collapse li").removeClass('active');
-            $(".navbar-collapse li a[href='#contacts']").parent().addClass('active');
-        });
+                    $(".breadcrumb").empty();
+                    $(".breadcrumb").append("<li class='breadcrumb-item'><a href='#home'>Home</a></li>");
+                    $(".breadcrumb").append("<li class='breadcrumb-item'><a href='#ticket'>Ticket</a></li>");
+                    $(".breadcrumb").append("<li class='breadcrumb-item active'>Edit Ticket</li>");
 
+                })
+            },
+            error: function (xhr, statusText, err) {
+                $('body').empty();
+                console.log("error");
+                console.log(xhr);
+                console.log(statusText);
+                console.log(err);
+            }
+        })
     });
 
     hasher.initialized.add(parseHash); //parse initial hash
