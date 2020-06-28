@@ -225,15 +225,17 @@
    /**
      * Public route /auth for creds authentication / login process
      */
-   $app->post('/auth', function($request, $response){
+    $app->post('/auth', function($request, $response){
+      
       //extract form data - email and password
-      $email = $request->getParsedBody()['email'];
-      $password = $request->getParsedBody()['password'];
+      $json = json_decode($request->getBody());
+      $email = $json->email;
+      $clearpassword = $json->password;
 
       //do db authentication
       $db = getDatabase();
       $data = $db->authenticateUser($email);
-
+      $db->close();
 
       //status -1 -> user not found
       //status 0 -> wrong password
@@ -246,16 +248,27 @@
       if ($data === NULL) {
          $returndata = array(
             "loginStatus" => false,
-            "errorMessage" => "No user found"
+            "errorMessage" => "Username/password is incorrect!"
          );           
       }      
       else { //user found
 
-         if ($data->password == $password) {
+         if (password_verify($clearpassword, $data->passwordhash)) {
 
-            $token=generateTokenV2($data->role, $data->username, $data->email,$data->id);
-            $db->updateCurrentToken($token,$email);
-            $db->close();
+            //create JWT token
+            $date = date_create();
+            $jwtIAT = date_timestamp_get($date);
+            $jwtExp = $jwtIAT + (60 * 60 * 12); //expire after 12 hours
+
+            $jwtToken = array(
+               "iss" => "mycontacts.net", //token issuer
+               "iat" => $jwtIAT, //issued at time
+               "exp" => $jwtExp, //expire
+               "role" => "member",
+               "email" => $data->email,
+               "username" => $data->username
+            );
+            $token = JWT::encode($jwtToken, getenv('JWT_SECRET'));
 
             $returndata = array(
                "loginStatus" => true, 
@@ -275,6 +288,89 @@
       return $response->withJson($returndata, 200)
                       ->withHeader('Content-type', 'application/json');    
    }); 
+   // $app->post('/auth', function($request, $response){
+   //    //extract form data - email and password
+   //    // $email = $request->getParsedBody()['email'];
+   //    // $password = $request->getParsedBody()['password'];
+   //    $json = json_decode($request->getBody());
+   //    $email = $json->email;
+   //    $clearpassword = $json->password;
+
+   //    //do db authentication
+   //    $db = getDatabase();
+   //    $data = $db->authenticateUser($email);
+
+
+   //    //status -1 -> user not found
+   //    //status 0 -> wrong password
+   //    //status 1 -> login success
+
+   //    $returndata = array(
+   //    );
+
+   //    //user not found
+   //    if ($data === NULL) {
+   //       $returndata = array(
+   //          "loginStatus" => false,
+   //          "errorMessage" => "No user found"
+   //       );           
+   //    }      
+   //    else { //user found
+
+   //       // if ($data->password == $password) {
+
+   //       //    $token=generateTokenV2($data->role, $data->username, $data->email,$data->id);
+   //       //    $db->updateCurrentToken($token,$email);
+   //       //    $db->close();
+
+   //       //    $returndata = array(
+   //       //       "loginStatus" => true, 
+   //       //       "token" => $token
+   //       //    );
+
+   //       // } else {
+
+   //       //    $returndata = array(
+   //       //       "loginStatus" => false,
+   //       //       "errorMessage" => "Username/password is incorrect!"
+   //       //    );
+
+   //       // }
+   //       if (password_verify($clearpassword, $data->passwordhash)) {
+
+   //          //create JWT token
+   //          $date = date_create();
+   //          $jwtIAT = date_timestamp_get($date);
+   //          $jwtExp = $jwtIAT + (60 * 60 * 12); //expire after 12 hours
+
+   //          $jwtToken = array(
+   //             "iss" => "mycontacts.net", //token issuer
+   //             "iat" => $jwtIAT, //issued at time
+   //             "exp" => $jwtExp, //expire
+   //             "role" => "member",
+   //             "email" => $data->email,
+   //             "username" => $data->username
+   //          );
+   //          $token = JWT::encode($jwtToken, getenv('JWT_SECRET'));
+
+   //          $returndata = array(
+   //             "loginStatus" => true, 
+   //             "token" => $token
+   //          );
+
+   //       } else {
+
+   //          $returndata = array(
+   //             "loginStatus" => false,
+   //             "errorMessage" => "Username/password is incorrect!"
+   //          );
+
+   //       }
+   //    }  
+
+   //    return $response->withJson($returndata, 200)
+   //                    ->withHeader('Content-type', 'application/json');    
+   // }); 
 
 
    $app->post('/createBooking', function($request, $response){
@@ -323,12 +419,13 @@
    $app->post('/registration', function($request, $response){
 
       $json = json_decode($request->getBody());
-      $login = $json->login;
+      $email = $json->email;
       $clearpassword = $json->password;
+      $username = $json->username;
 
       //insert user
       $db = getDatabase();
-      $dbs = $db->insertUser($login, $clearpassword);
+      $dbs = $db->insertUser($email, $clearpassword,$username);
       $db->close();
 
       $data = array(

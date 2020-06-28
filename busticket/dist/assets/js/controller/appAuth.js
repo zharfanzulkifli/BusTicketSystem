@@ -12,9 +12,11 @@ $(function () {
             return;
         }
 
-        $.get('js/templates/register.handlebars').then(function (src) {
+        $.get('assets/js/templates/register.handlebars').then(function (src) {
             var createRegisterTemplate = Handlebars.compile(src);
 
+            $("#topnav").empty();
+            $("#wrap").empty();
             $("#divcontent").empty();
             $("#divcontent").html(createRegisterTemplate).hide().fadeIn(100);
         });
@@ -28,9 +30,11 @@ $(function () {
             return;
         }
 
-        $.get('js/templates/login.handlebars').then(function (src) {
+        $.get('assets/js/templates/login.handlebars').then(function (src) {
             var createLoginTemplate = Handlebars.compile(src);
 
+            $("#wrap").empty();
+            $("#topnav").empty();
             $("#divcontent").empty();
             $("#divcontent").html(createLoginTemplate).hide().fadeIn(100);
 

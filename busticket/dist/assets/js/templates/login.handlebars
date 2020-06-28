@@ -4,7 +4,7 @@
                 <div class="row justify-content-center">
                     <div class="col-md-8 col-lg-6 col-xl-5">
                         <div class="text-center">
-                            <a href="#">
+                            <a href="">
                                 <span><img src="assets/images/bushub.png" alt="" height="400" ></span>
                             </a>
                             <p class="text-muted mt-2 mb-4">Bus Ticketing Platform</p>
@@ -17,16 +17,16 @@
                                     <h4 class="text-uppercase mt-0">Sign In</h4>
                                 </div>
 
-                                <form action="#">
-
+                                <form class="form-horizontal" id="loginform">
+                                <fieldset>
                                     <div class="form-group mb-3">
-                                        <label for="loginusername">Username</label>
-                                        <input class="form-control" type="text" id="loginusername" required="" placeholder="Enter your email">
+                                        <label for="loginemail">Username</label>
+                                        <input class="form-control" type="email" id="loginemail" required="" placeholder="Enter your email">
                                     </div>
 
                                     <div class="form-group mb-3">
                                         <label for="password">Password</label>
-                                        <input class="form-control" type="password" required="" id="password" placeholder="Enter your password">
+                                        <input class="form-control" type="password" required="" id="loginpassword" placeholder="Enter your password">
                                     </div>
 
                                     <div class="form-group mb-3">
@@ -39,7 +39,7 @@
                                     <div class="form-group mb-0 text-center">
                                         <button class="btn btn-primary btn-block" type="submit"> Log In </button>
                                     </div>
-
+                                    </fieldset>
                                 </form>
 
                             </div> <!-- end card-body -->

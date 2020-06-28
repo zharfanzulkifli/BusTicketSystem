@@ -228,24 +228,46 @@ class Database
    }
 
    
-   function authenticateUser($email)
-   {
-      $sql = "SELECT * from users
-                 WHERE email = :email";
+   // function authenticateUser($email)
+   // {
+   //    $sql = "SELECT * from users
+   //               WHERE email = :email";
+
+   //    $stmt = $this->db->prepare($sql);
+   //    $stmt->bindParam("email", $email);
+   //    $stmt->execute();
+   //    $row_count = $stmt->rowCount();
+
+   //    $user = null;
+
+   //    if ($row_count) {
+   //       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+   //          $user = new UsersV2();
+   //          $user->id= $row['id'];
+   //          $user->username = $row['username'];
+   //          $user->password = $row['password'];
+   //          $user->email = $row['email'];
+   //          $user->role = $row['role'];
+   //       }
+   //    }
+   function authenticateUser($email) {
+      $sql = "SELECT id,username, password as passwordhash, email, role
+              FROM users
+              WHERE email = :email";        
 
       $stmt = $this->db->prepare($sql);
       $stmt->bindParam("email", $email);
-      $stmt->execute();
-      $row_count = $stmt->rowCount();
+      $stmt->execute(); 
+      $row_count = $stmt->rowCount(); 
 
       $user = null;
 
       if ($row_count) {
-         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $user = new UsersV2();
-            $user->id= $row['id'];
+            $user->id = $row['id'];
             $user->username = $row['username'];
-            $user->password = $row['password'];
+            $user->passwordhash = $row['passwordhash'];
             $user->email = $row['email'];
             $user->role = $row['role'];
          }
@@ -253,6 +275,8 @@ class Database
 
       return $user;
    }
+
+    
 
    function updateCurrentToken($token,$email){
 
@@ -362,20 +386,32 @@ class Database
 
 
    // =============EDIT FUNCTION END HERE==============//
+   //hashpassword
+   function hashPassword($password) { 
 
-   function insertUser($login, $clearpassword)
+      $cost = 10;
+
+      $options = [
+         'cost' => $cost,
+      ];
+
+      $passwordhash =  password_hash($password, PASSWORD_BCRYPT, $options);
+      return $passwordhash;
+   }
+   function insertUser($email, $clearpassword,$username)
    {
 
       //hash the password using one way md5 brcrypt hashing
       $passwordhash = hashPassword($clearpassword);
       try {
 
-         $sql = "INSERT INTO users(login, password, addeddate) 
-                    VALUES (:login, :password, NOW())";
+         $sql = "INSERT INTO users(email, password,username, role) 
+                    VALUES (:email, :password, :username, 'member')";
 
          $stmt = $this->db->prepare($sql);
-         $stmt->bindParam("login", $login);
+         $stmt->bindParam("email", $email);
          $stmt->bindParam("password", $passwordhash);
+         $stmt->bindParam("username", $username);
          $stmt->execute();
 
          $dbs = new DbStatus();
