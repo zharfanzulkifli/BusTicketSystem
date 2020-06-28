@@ -20,6 +20,7 @@ $(function () {
                     // $('body').append(html);
                     $("#divcontent").empty();
                     $("#divcontent").html(html);
+
                 })
                 console.log({ "ticketlist": data });
             },
