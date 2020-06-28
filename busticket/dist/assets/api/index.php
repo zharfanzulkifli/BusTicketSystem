@@ -219,7 +219,7 @@
 
       // return $response->withJson($data, 200)
       //                 ->withHeader('Content-type', 'application/json');
-      return $data;
+      return $dbs;
    });
 
    /**

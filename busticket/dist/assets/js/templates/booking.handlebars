@@ -26,7 +26,8 @@
                                             <td>{{ticketid}}</td>
                                             <td>{{userid}}</td>
                                             <td>
-                                                <a href="javascript:;" class="updatestatus">{{{displaystatus status}}}</a>
+                                                <a href="javascript:;"
+                                                    class="updatestatus">{{{displaystatus status}}}</a>
                                             </td>
                                         </tr>
                                         {{/each}}
@@ -50,40 +51,12 @@
                 url: 'assets/api/booking/flipstatus/' + id,
                 dataType: "json",
                 success: function (data) {
-
-                    $.ajax({
-                        type: "GET",
-                        url: 'assets/api/booking',
-                        dataType: "json",
-                        success: function (data) {
-                            $.ajax({
-                                type: "GET",
-                                url: 'assets/api/booking',
-                                dataType: "json",
-                                success: function (data) {
-                                    $.get('assets/js/templates/booking.handlebars').then(function (src) {
-                                        var template = Handlebars.compile(src);
-                                        var html = template({ "bookings": data });
-                                        $("#divcontent").empty();
-                                        $("#divcontent").html(html);
-                                    })
-                                },
-                                error: function (xhr, statusText, err) {
-                                    console.log("error");
-                                    console.log(xhr);
-                                    console.log(statusText);
-                                    console.log(err);
-                                }
-                            })
-                        },
-                        error: function (xhr, statusText, err) {
-                            console.log("error");
-                            console.log(xhr);
-                            console.log(statusText);
-                            console.log(err);
-                        }
+                    $.get('assets/js/templates/booking.handlebars').then(function (src) {
+                        var template = Handlebars.compile(src);
+                        var html = template({ "bookings": data });
+                        $("#divcontent").empty();
+                        $("#divcontent").html(html);
                     })
-
                 },
                 error: function (xhr, statusText, err) {
                     // $('body').empty();
