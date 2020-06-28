@@ -10,7 +10,7 @@
                     <div class="responsive-table-plugin">
                         <div class="table-rep-plugin">
                             <div class="table-responsive">
-                                <table class="table table-striped mb-0">
+                                <table class="table table-striped mb-0" id="tblbooking">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
@@ -25,7 +25,9 @@
                                             <td>{{id}}</td>
                                             <td>{{ticketid}}</td>
                                             <td>{{userid}}</td>
-                                            <td>{{status}} <a href="#booking/flipstatus/{{id}}">flip</a></td>
+                                            <td>
+                                                <a href="javascript:;" class="updatestatus">{{{displaystatus status}}}</a>
+                                            </td>
                                         </tr>
                                         {{/each}}
                                     </tbody>
@@ -38,3 +40,59 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $("#tblbooking").on("click", ".updatestatus", function () {
+            var id = $(this).parent().parent().children().eq(0).html();
+            $.ajax({
+                type: "PUT",
+                url: 'assets/api/booking/flipstatus/' + id,
+                dataType: "json",
+                success: function (data) {
+
+                    $.ajax({
+                        type: "GET",
+                        url: 'assets/api/booking',
+                        dataType: "json",
+                        success: function (data) {
+                            $.ajax({
+                                type: "GET",
+                                url: 'assets/api/booking',
+                                dataType: "json",
+                                success: function (data) {
+                                    $.get('assets/js/templates/booking.handlebars').then(function (src) {
+                                        var template = Handlebars.compile(src);
+                                        var html = template({ "bookings": data });
+                                        $("#divcontent").empty();
+                                        $("#divcontent").html(html);
+                                    })
+                                },
+                                error: function (xhr, statusText, err) {
+                                    console.log("error");
+                                    console.log(xhr);
+                                    console.log(statusText);
+                                    console.log(err);
+                                }
+                            })
+                        },
+                        error: function (xhr, statusText, err) {
+                            console.log("error");
+                            console.log(xhr);
+                            console.log(statusText);
+                            console.log(err);
+                        }
+                    })
+
+                },
+                error: function (xhr, statusText, err) {
+                    // $('body').empty();
+                    console.log("error");
+                    console.log(xhr);
+                    console.log(statusText);
+                    console.log(err);
+                }
+            })
+        });
+    });
+</script>

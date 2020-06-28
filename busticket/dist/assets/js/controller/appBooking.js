@@ -10,10 +10,17 @@ $(function () {
     function parseHash(newHash, oldHash) {
         crossroads.parse(newHash);
     }
+
+    Handlebars.registerHelper("displaystatus", function(status){
+        if (status == 0){
+            return "<span class='badge badge-danger'>Pending</span>";
+        } else if (status == 1) {
+            return "<span class='badge badge-success'>Accepted</span>";
+        }
+    });
+
     crossroads.ignoreState = true;
-    console.log("test2");
     var bookingRoute = crossroads.addRoute('/booking', function () {
-        console.log("test");
         $.ajax({
             type: "GET",
             url: 'assets/api/booking',
@@ -22,16 +29,11 @@ $(function () {
                 $.get('assets/js/templates/booking.handlebars').then(function (src) {
                     var template = Handlebars.compile(src);
                     var html = template({ "bookings": data });
-                    // $('body').empty();
-                    // // $('body').html(html);
-                    // $('body').append(html);
                     $("#divcontent").empty();
                     $("#divcontent").html(html);
                 })
-                console.log({ "bookings": data });
             },
             error: function (xhr, statusText, err) {
-                $('body').empty();
                 console.log("error");
                 console.log(xhr);
                 console.log(statusText);
@@ -39,31 +41,41 @@ $(function () {
             }
         })
     });
-    crossroads.addRoute('/booking/flipstatus/', function () {
-        console.log("test");
-        $.ajax({
-            type: "PUT",
-            url: 'assets/api/booking',
-            dataType: "json",
-            success: function (data) {
-                // $.get('assets/js/templates/booking.handlebars').then(function (src) {
-                //     var template = Handlebars.compile(src);
-                //     var html = template({ "bookings": data });
-                //     $("#divcontent").empty();
-                //     $("#divcontent").html(html).hide().fadeIn(1000);
-                // })
-                // console.log({ "bookings": data });
-                console.log("hoho");
-            },
-            error: function (xhr, statusText, err) {
-                // $('body').empty();
-                console.log("error");
-                console.log(xhr);
-                console.log(statusText);
-                console.log(err);
-            }
-        })
-    });
+    // crossroads.addRoute('/booking/flipstatus/{id}', function ($id) {
+    //     $.ajax({
+    //         type: "PUT",
+    //         url: 'assets/api/booking/flipstatus/' + $id,
+    //         dataType: "json",
+    //         success: function (data) {
+    //             $.ajax({
+    //                 type: "GET",
+    //                 url: 'assets/api/booking',
+    //                 dataType: "json",
+    //                 success: function (data) {
+    //                     $.get('assets/js/templates/booking.handlebars').then(function (src) {
+    //                         var template = Handlebars.compile(src);
+    //                         var html = template({ "bookings": data });
+    //                         $("#divcontent").empty();
+    //                         $("#divcontent").html(html);
+    //                     })
+    //                 },
+    //                 error: function (xhr, statusText, err) {
+    //                     console.log("error");
+    //                     console.log(xhr);
+    //                     console.log(statusText);
+    //                     console.log(err);
+    //                 }
+    //             })
+    //         },
+    //         error: function (xhr, statusText, err) {
+    //             // $('body').empty();
+    //             console.log("error");
+    //             console.log(xhr);
+    //             console.log(statusText);
+    //             console.log(err);
+    //         }
+    //     })
+    // });
 
     hasher.initialized.add(parseHash); //parse initial hash
     hasher.changed.add(parseHash); //parse hash changes
